@@ -10,6 +10,7 @@ function login() {
 
   if (email && password && userName) {
     islogin = true;
+    localStorage.setItem("isLogin", true);
     Swal.fire({
       icon: "success",
       title: "Login Successful",
