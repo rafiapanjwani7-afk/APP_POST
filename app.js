@@ -1,25 +1,23 @@
-// GLOBALS
 var editCard = null;
 var cardBg = "";
-
+var time = moment().format("MMMM Do YYYY, h:mm:ss a");
+var islogin = false;
 // LOGIN
 function login() {
   var email = document.getElementById("email").value;
   var password = document.getElementById("password").value;
+  var userName = document.getElementById("name").value;
 
-  if (email && password) {
-
-    // ✅ SAVE LOGIN STATE
-    localStorage.setItem("isLogin", true);
-
+  if (email && password && userName) {
+    islogin = true;
     Swal.fire({
       icon: "success",
       title: "Login Successful",
     });
 
     setTimeout(() => {
-      window.location = "index.html";
-    }, 1000);
+      window.location.href = "../index.html";
+    }, 400);
 
   } else {
     Swal.fire({
@@ -60,7 +58,7 @@ function signfrom() {
     password: password
   };
 
-  localStorage.setItem("user", JSON.stringify(user));
+
 
   Swal.fire({
     icon: "success",
@@ -87,12 +85,6 @@ function logout() {
   }, 800);
 }
 
-// PROTECT DASHBOARD
-if (window.location.pathname.includes("index.html")) {
-  if (!localStorage.getItem("isLogin")) {
-    window.location = "login.html";
-  }
-}
 
 // POST FUNCTION
 function post() {
@@ -108,14 +100,10 @@ function post() {
     });
     return;
   }
-
-  // ✅ FIX: no moment dependency
-  var currentTime = new Date().toLocaleString();
-
   // EDIT MODE
   if (editCard) {
-    editCard.querySelector("p").innerText = title.value;
-    editCard.querySelector("footer").innerText = description.value;
+    editCard.children[1].children[0].innerText = title.value;
+    editCard.children[1].children[1].innerText = description.value;
     editCard = null;
 
     title.value = "";
@@ -125,26 +113,25 @@ function post() {
 
   // NEW POST
   posts.innerHTML += `
-  <div class="card mb-2">
+  <div class="card mb-2  ">
     <div class="card-header">
       ~Post <br>
-      <small style="color:#6e8692;">${currentTime}</small>
+      <small style="color:#6e8692;">${time}</small>
     </div>
-
-    <div class="card-body" style="background-image:url(${cardBg}); background-size:cover;">
+    <div class="card-body p-2" style="background-image:url(${cardBg}); background-size:cover;">
       <blockquote class="blockquote">
-        <p>${title.value}</p>
-        <footer class="blockquote-footer">${description.value}</footer>
+        <p class="p-2">${title.value}</p>
+        <footer class="blockquote-footer p-2 card-text">${description.value}</footer>
       </blockquote>
     </div>
 
     
 
-      <div class="d-flex gap-4 ms-auto mt-1 mb-1">
-        <button class="btn color p-0 small" onclick="editPost(this)">
+      <div class="d-flex gap-4 ms-auto mt-1 mb-1 ">
+        <button class="btn color p-1 editBtn" onclick="editPost(this)">
           Edit
         </button>
-        <button class="btn color p-0 small" onclick="delPost(this)">
+        <button class="btn color p-1 delectBtn" onclick="delPost(this)">
           Delete
         </button>
       
@@ -158,40 +145,33 @@ function post() {
 
 // DELETE
 function delPost(btn) {
-  var card = btn.parentNode.parentNode.parentNode;
+  var card = btn.parentNode.parentNode;
   Swal.fire({
     title: "Are you sure?",
     icon: "warning",
     showCancelButton: true,
-  }).then((result) => {
-    if (result.isConfirmed) {
-      card.remove();
-    }
-  });
+  })
+  card.remove()
+
 }
 
 function editPost(btn) {
-  var card = btn.closest(".card");
-  document.getElementById("title").value = card.querySelector("p").innerText;
-  document.getElementById("description").value = card.querySelector("footer").innerText;
-  editCard = card;
+  var card = btn.parentNode.parentNode;
+  var Title = card.children[1].children[0].innerText
+  var Description = card.children[1].children[1].innerText
+  console.log(Title, Description);
+  document.getElementById("title").value = Title
+  document.getElementById("description").value = Description
+  editCard = card
 }
 
-
-// function colorChange(btn) {
-//   btn.classList.toggle("liked");
-//   btn.innerText = btn.classList.contains("liked") ? "Liked" : "Like";
-// }
-
 // IMAGE
-function addImg(src, event) {
+function addImg(src) {
   cardBg = src;
-
   var bgImg = document.getElementsByClassName("bgImg");
-
   for (var i = 0; i < bgImg.length; i++) {
-    bgImg[i].classList.remove("addImg");
+    console.log(bgImg[i].className);
+    bgImg[i].className = "bgImg"
   }
-
   event.target.classList.add("addImg");
 }
