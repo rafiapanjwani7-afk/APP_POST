@@ -1,78 +1,38 @@
 var editCard = null;
 var cardBg = "";
 var time = moment().format("MMMM Do YYYY, h:mm:ss a");
-var islogin = false;
+var loginPt = false;
+var currentUser = "";
 // LOGIN
 function login() {
-  var email = document.getElementById("email").value;
-  var password = document.getElementById("password").value;
-  var userName = document.getElementById("name").value;
+  var email = document.getElementById("email").value.trim();
+  var password = document.getElementById("password").value.trim();
+  var userName = document.getElementById("name").value.trim();
 
   if (email && password && userName) {
-    islogin = true;
-    localStorage.setItem("isLogin", true);
+    loginPt = true;
+    currentUser = userName.charAt(0).toUpperCase() + userName.slice(1);
+    document.getElementById("logincontainer").style.display = "none";
+    document.getElementById("postContainer").style.display = "block";
     Swal.fire({
       icon: "success",
       title: "Login Successful",
+      text: "Welcome! " + currentUser
     });
-
-    setTimeout(() => {
-      window.location.href = "../index.html";
-    }, 400);
 
   } else {
     Swal.fire({
       icon: "error",
-      title: "Invalid Email or Password",
+      title: "Fill all fields",
     });
+
   }
-}
-
-function signfrom() {
-  var name = document.getElementById("name").value;
-  var email = document.getElementById("userEmail").value;
-  var password = document.getElementById("userPassword").value;
-  var confirmPassword = document.getElementById("confirmPassword").value;
-
-  // EMPTY CHECK
-  if (!name || !email || !password || !confirmPassword) {
-    Swal.fire({
-      icon: "error",
-      title: "All fields are required",
-    });
-    return;
-  }
-
-  // PASSWORD MATCH CHECK
-  if (password !== confirmPassword) {
-    Swal.fire({
-      icon: "error",
-      title: "Passwords do not match",
-    });
-    return;
-  }
-
-  // SAVE USER
-  var user = {
-    name: name,
-    email: email,
-    password: password
-  };
-
-
-
-  Swal.fire({
-    icon: "success",
-    title: "Signup Successful",
-  });
-
-  setTimeout(() => {
-    window.location.href = "login.html";
-  }, 1000);
 }
 // LOGOUT
 function logout() {
-  localStorage.removeItem("isLogin");
+  
+  
+  currentUser = "";
 
   Swal.fire({
     icon: "success",
@@ -80,13 +40,30 @@ function logout() {
     timer: 800,
     showConfirmButton: false,
   });
-
-  setTimeout(() => {
-    window.location = "login.html";
-  }, 800);
+document.getElementById("logincontainer").style.display = "block";
+    document.getElementById("postContainer").style.display = "none";
+ 
 }
 
+function editPost() {
+  var card = event.target.parentNode.parentNode;
+  var title = card.children[1].children[0].children[0].innerText;
+   var description = card.children[1].children[0].children[1].innerText;
+    Swal.fire({
+    icon: "info",
+    title: "Edit Mode Activated",
+    text: "You can now update your post",
+    confirmButtonText: "Continue"
+  }).then(() => {
+    
+    document.getElementById("title").value = title;
+    document.getElementById("description").value = description;
 
+    editCard = card.remove();
+
+  });
+
+}
 // POST FUNCTION
 function post() {
   var title = document.getElementById("title");
@@ -116,7 +93,7 @@ function post() {
   posts.innerHTML += `
   <div class="card mb-2  ">
     <div class="card-header">
-      ~Post <br>
+      ~${currentUser} <br>
       <small style="color:#6e8692;">${time}</small>
     </div>
     <div class="card-body p-2" style="background-image:url(${cardBg}); background-size:cover;">
@@ -125,17 +102,13 @@ function post() {
         <footer class="blockquote-footer p-2 card-text">${description.value}</footer>
       </blockquote>
     </div>
-
-    
-
       <div class="d-flex gap-4 ms-auto mt-1 mb-1 ">
-        <button class="btn color p-1 editBtn" onclick="editPost(this)">
+        <button class="btn color p-1 editBtn" onclick="editPost()">
           Edit
         </button>
         <button class="btn color p-1 delectBtn" onclick="delPost(this)">
           Delete
         </button>
-      
     </div>
   </div>
   `;
@@ -151,21 +124,16 @@ function delPost(btn) {
     title: "Are you sure?",
     icon: "warning",
     showCancelButton: true,
-  })
-  card.remove()
-
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Yes, delete it!"
+  }).then((result) => {
+    if (result.isConfirmed) {
+      card.remove();
+    }
+  });
+   
 }
-
-function editPost(btn) {
-  var card = btn.parentNode.parentNode;
-  var Title = card.children[1].children[0].innerText
-  var Description = card.children[1].children[1].innerText
-  console.log(Title, Description);
-  document.getElementById("title").value = Title
-  document.getElementById("description").value = Description
-  editCard = card
-}
-
 // IMAGE
 function addImg(src) {
   cardBg = src;

@@ -34,6 +34,10 @@ body {
     text-align: center;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
+#logincontainer{
+     text-align: center;
+     margin-top: 15px;
+}
 
 
 /* Inputs */
@@ -100,6 +104,7 @@ input:focus {
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
     margin-bottom: 25px;
     transition: 1s;
+   
 }
 
 .card:hover {
@@ -207,6 +212,9 @@ a{
 .form-control:focus {
     border-color: #26a69998;
     box-shadow: 0 0 0 0.2rem #015f54c4 !important;
+}
+#postContainer{
+    display: none;
 }
 
 /* ---------------- SWEETALERT ---------------- */

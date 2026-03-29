@@ -25,13 +25,28 @@
                     </li>
 
                 </ul>
-
-
             </div>
         </div>
     </nav>
+    <div class="container  loginCont" id="logincontainer">
+        <div class="login-form card " id="loginPost">
+            <h2>login</h2>
+            <form>
+                <label> <input id="name" type="text" placeholder="Enter your Name" required></label>
+                <label><br>
+                <label> <input id="email" type="email" placeholder="Enter Your Email" required></label>
+                <label><br>
+                    <input id="password" type="password" placeholder="Enter a password" required>
+                </label><br>
+                <label>
+                    <button type="button" onclick="login()">login</button>
+                </label><br>
+                <p>Don't have an account? <a href="sign.html">signup</a> </p>
+            </form>
+        </div>
+    </div>
     
-    <div class="container mt-5">
+    <div class="container mt-5" id="postContainer">
         <div class="row">
             <div class="col-sm-12 col-md-6 col-lg-4">
                 <div class="card p-3 m-2">
